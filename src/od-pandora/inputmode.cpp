@@ -87,14 +87,14 @@ void inputmode_redraw(void)
 
 void set_joyConf(struct uae_prefs *p)
 {
-	if(p->pandora_joyConf == 0)
+	if(p->pandora_joyConf == 1)
 	{
 		p->pandora_button1 = GP2X_BUTTON_X;
 		p->pandora_button2 = GP2X_BUTTON_A;
 		p->pandora_jump = -1;
 		p->pandora_autofireButton1 = GP2X_BUTTON_B;
 	}
-	else if(p->pandora_joyConf == 1)
+	else if(p->pandora_joyConf == 0)
 	{
 		p->pandora_button1 = GP2X_BUTTON_B;
 		p->pandora_button2 = GP2X_BUTTON_A;

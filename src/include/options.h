@@ -19,7 +19,7 @@ struct strlist {
     int unknown;
 };
 
-#define DEFAULT_JIT_CACHE_SIZE 8192
+#define DEFAULT_JIT_CACHE_SIZE 0
 
 #define CONFIG_TYPE_HARDWARE 1
 #define CONFIG_TYPE_HOST 2

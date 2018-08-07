@@ -77,6 +77,20 @@ else ifeq ($(platform), rpi2)
    	CC = gcc
    	CXX = g++ 
 LDFLAGS += -lz -lpthread
+else ifeq ($(platform), nintendoc)
+    	TARGET := $(TARGET_NAME)_libretro.so
+   	fpic = -fPIC
+   	SHARED :=-shared -Wl,--version-script=$(CORE_DIR)/libretro/link.T -Wl,--no-undefined
+	PLATFORM_DEFINES += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
+	CPU_FLAGS +=  -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -D__arm__ -DARM_ASM -D__NEON_OPT
+
+	PLATFORM_DEFINES +=   -DLSB_FIRST -DALIGN_DWORD -DWITH_LOGGING
+	HAVE_NEON = 1
+	CFLAGS += $(PLATFORM_DEFINES)
+	CXXFLAGS += $(PLATFORM_DEFINES)
+   	CC = arm-linux-gnueabihf-gcc-5
+   	CXX = g++ 
+LDFLAGS += -lz -lpthread
 # use for raspberry pi
 else ifeq ($(platform), rpi) 
 	   TARGET := $(TARGET_NAME)_libretro.so
@@ -186,6 +200,16 @@ $(TARGET): $(OBJECTS)
 
 endif
 
+ifeq ($(platform),nintendoc)
+	@echo "** BUILDING HAKCHI HMOD PACKAGE **"
+	mkdir -p libretro/hakchi/etc/libretro/core/ libretro/hakchi/etc/libretro/info/
+	rm -f libretro/hakchi/etc/libretro/info/*
+	cp $(TARGET_NAME)_libretro.so libretro/hakchi/etc/libretro/core/
+	cd libretro/hakchi/etc/libretro/info/; wget https://buildbot.libretro.com/assets/frontend/info/$(TARGET_NAME)_libretro.info
+	cd libretro/hakchi/; tar -czvf "CORE_$(TARGET_NAME).hmod" *
+	
+endif
+
 $(EMU)/od-retro/neon_helper.o: $(EMU)/od-retro/neon_helper.s
 	$(CXX) $(CPU_FLAGS) $(PLATFORM_DEFINES) -Wall -o $(EMU)/od-retro/neon_helper.o -c $(EMU)/od-retro/neon_helper.s
 	echo $(OBJS)
@@ -200,7 +224,7 @@ $(EMU)/od-retro/neon_helper.o: $(EMU)/od-retro/neon_helper.s
 	$(CC_AS) $(CFLAGS)  $(PLATFLAGS) -c $^ -o $@
 
 clean:
-	rm -f $(OBJECTS) $(TARGET) 
+	rm -f $(OBJECTS) $(TARGET) libretro/hakchi/CORE_$(TARGET_NAME).hmod libretro/hakchi/etc/libretro/core/$(TARGET_NAME)_libretro.so
 
 .PHONY: clean
 
