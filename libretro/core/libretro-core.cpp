@@ -12,8 +12,8 @@ cothread_t emuThread;
 int CROP_WIDTH;
 int CROP_HEIGHT;
 int VIRTUAL_WIDTH ;
-int retrow=640; 
-int retroh=480;
+int retrow=1024; 
+int retroh=1024;
 unsigned short int bmp[400*300];
 
 #define RETRO_DEVICE_AMIGA_KEYBOARD RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_KEYBOARD, 0)
@@ -28,6 +28,7 @@ int retrojoy_init=0,retro_ui_finalized=0;
 
 extern int SHIFTON,pauseg,SND ,snd_sampler;
 extern short signed int SNDBUF[1024*2];
+int sampleSize = sizeof(SNDBUF);
 extern char RPATH[512];
 extern char RETRO_DIR[512];
 int cap32_statusbar=0;
@@ -584,11 +585,11 @@ void retro_run(void)
    if(pauseg==0)
    {
 
-//testsnd(882*2*2);
-for(x=0;x<882*2;x+=2)audio_cb(SNDBUF[x],SNDBUF[x+2]);
+      
+        audio_batch_cb(SNDBUF, sampleSize/2);
+        
 
-
-		if(SHOWKEY )retro_virtualkb();
+	if(SHOWKEY )retro_virtualkb();
    }
 
    video_cb(Retro_Screen,retrow,retroh,retrow<<PIXEL_BYTES);

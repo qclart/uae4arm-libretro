@@ -86,6 +86,7 @@ else ifeq ($(platform), nintendoc)
 
 	PLATFORM_DEFINES +=   -DLSB_FIRST -DALIGN_DWORD -DWITH_LOGGING
 	HAVE_NEON = 1
+	USE_PICASSO96 = 1
 	CFLAGS += $(PLATFORM_DEFINES)
 	CXXFLAGS += $(PLATFORM_DEFINES)
    	CC = arm-linux-gnueabihf-gcc-5

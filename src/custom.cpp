@@ -58,6 +58,8 @@ STATIC_INLINE int nocustom(void)
 
 static uae_u16 last_custom_value;
 
+extern int screen_is_picasso;
+
 /* Mouse and joystick emulation */
 int buttonstate[3];
 int joy0button, joy1button;
@@ -2073,6 +2075,9 @@ void compute_vsynctime (void)
 {
     if (currprefs.chipset_refreshrate) {
 	vblank_hz = currprefs.chipset_refreshrate;
+    }
+    if (screen_is_picasso) {
+	beamcon0 = new_beamcon0 = currprefs.ntscmode ? 0x00 : 0x20;
     }
 	vsynctime = syncbase / vblank_hz;
     if (currprefs.produce_sound > 1)
